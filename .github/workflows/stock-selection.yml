@@ -33,7 +33,11 @@ jobs:
           pip install pywencai pandas requests
           
       - name: 运行选股脚本
-        run: node wencai_example.js
+        run: |
+          echo "Starting stock selection script..."
+          echo "FEISHU_WEBHOOK set: ${{ secrets.FEISHU_WEBHOOK != '' }}"
+          echo "WENCAI_COOKIE set: ${{ secrets.WENCAI_COOKIE != '' }}"
+          node wencai_example.js
         env:
           FEISHU_WEBHOOK: ${{ secrets.FEISHU_WEBHOOK }}
           WENCAI_COOKIE: ${{ secrets.WENCAI_COOKIE }}
