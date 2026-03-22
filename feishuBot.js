@@ -1,5 +1,4 @@
 const axios = require('axios');
-const config = require('./config');
 const { Client } = require('@larksuiteoapi/node-sdk');
 const { execSync } = require('child_process');
 const fs = require('fs');
@@ -7,12 +6,17 @@ const path = require('path');
 
 class FeishuBot {
   constructor() {
-    this.config = config;
+    // 使用环境变量
+    this.webhook = process.env.FEISHU_WEBHOOK || 'https://open.feishu.cn/open-apis/bot/v2/hook/4f9a2a04-f553-448c-bd80-8b5d01ebf207';
+    this.appId = process.env.FEISHU_APP_ID || '';
+    this.appSecret = process.env.FEISHU_APP_SECRET || '';
+    this.wencaiCookie = process.env.WENCAI_COOKIE || '';
+    
     // 初始化飞书客户端（如果使用应用机器人）
-    if (config.appId && config.appSecret) {
+    if (this.appId && this.appSecret) {
       this.client = new Client({
-        appId: config.appId,
-        appSecret: config.appSecret,
+        appId: this.appId,
+        appSecret: this.appSecret,
         // 更多配置请参考飞书开发文档
         disableTokenCache: false
       });
@@ -95,7 +99,7 @@ class FeishuBot {
   async send(message) {
     try {
       // 使用webhook发送消息
-      const response = await axios.post(this.config.webhook, message);
+      const response = await axios.post(this.webhook, message);
       return response.data;
     } catch (error) {
       console.error('发送消息失败:', error.message);
@@ -137,8 +141,8 @@ class FeishuBot {
   async selectStocks(query) {
     try {
       const wencaiPath = path.join(__dirname, 'wencai.py');
-      const pythonPath = config.wencai.venvPath;
-      const cookie = config.wencai.cookie;
+      const pythonPath = process.env.PYTHON_PATH || 'python3'; // 使用系统Python
+      const cookie = this.wencaiCookie;
       
       // 执行Python脚本
       const command = `${pythonPath} ${wencaiPath} "${query}" "${cookie}"`;
