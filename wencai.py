@@ -6,13 +6,11 @@ import sys
 def select_stocks(query, cookie):
     try:
         # 调用问财API获取数据
+        # 简化参数，只使用必要的参数
         result = pywencai.get(
             query=query,
             cookie=cookie,
-            loop=True,  # 循环获取所有页数据
-            log=True,  # 打印日志
-            sort_key='最新涨跌幅',  # 按涨幅排序
-            sort_order='desc'  # 降序排列
+            log=True  # 打印日志
         )
         
         # 检查结果类型
