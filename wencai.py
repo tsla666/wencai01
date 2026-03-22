@@ -16,7 +16,13 @@ def select_stocks(query, cookie):
         )
         
         # 检查结果类型
-        if isinstance(result, dict):
+        if result is None:
+            # 如果结果为None
+            return {
+                "type": "error",
+                "message": "查询结果为空"
+            }
+        elif isinstance(result, dict):
             # 如果是详情类结果
             return {
                 "type": "detail",
@@ -24,18 +30,24 @@ def select_stocks(query, cookie):
             }
         else:
             # 如果是DataFrame结果，转换为字典列表
-            stocks = []
-            for index, row in result.iterrows():
-                stock = {}
-                for col in result.columns:
-                    stock[col] = str(row[col])
-                stocks.append(stock)
-            
-            return {
-                "type": "list",
-                "data": stocks,
-                "count": len(stocks)
-            }
+            try:
+                stocks = []
+                for index, row in result.iterrows():
+                    stock = {}
+                    for col in result.columns:
+                        stock[col] = str(row[col])
+                    stocks.append(stock)
+                
+                return {
+                    "type": "list",
+                    "data": stocks,
+                    "count": len(stocks)
+                }
+            except Exception as e:
+                return {
+                    "type": "error",
+                    "message": f"处理结果失败: {str(e)}"
+                }
     except Exception as e:
         return {
             "type": "error",
