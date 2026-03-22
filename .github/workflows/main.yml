@@ -32,17 +32,6 @@ jobs:
           python -m pip install --upgrade pip
           pip install pywencai pandas requests
           
-      - name: 运行调试脚本
-        run: |
-          echo "Running debug script..."
-          node debug_wencai.js
-        env:
-          FEISHU_WEBHOOK: ${{ secrets.FEISHU_WEBHOOK }}
-          WENCAI_COOKIE: ${{ secrets.WENCAI_COOKIE }}
-          FEISHU_APP_ID: ${{ secrets.FEISHU_APP_ID }}
-          FEISHU_APP_SECRET: ${{ secrets.FEISHU_APP_SECRET }}
-          PYTHON_PATH: python3
-
       - name: 运行选股脚本
         run: |
           echo "Starting stock selection script..."
@@ -52,6 +41,3 @@ jobs:
         env:
           FEISHU_WEBHOOK: ${{ secrets.FEISHU_WEBHOOK }}
           WENCAI_COOKIE: ${{ secrets.WENCAI_COOKIE }}
-          FEISHU_APP_ID: ${{ secrets.FEISHU_APP_ID }}
-          FEISHU_APP_SECRET: ${{ secrets.FEISHU_APP_SECRET }}
-          PYTHON_PATH: python3
